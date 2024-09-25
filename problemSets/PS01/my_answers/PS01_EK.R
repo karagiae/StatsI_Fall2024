@@ -28,7 +28,7 @@ pkgTest <- function(pkg){
 # ex: stringr
 # lapply(c("stringr"),  pkgTest)
 
-lapply(c("stringr", "dplyr", "ggplot2", "tidyr"), pkgTest)
+lapply(c("stringr", "dplyr", "ggplot2", "tidyr", "GGally"), pkgTest)
 
 #####################
 # Problem 1
@@ -74,10 +74,10 @@ if (result$p.value < 0.05) {
 expenditure <- read.table("https://raw.githubusercontent.com/ASDS-TCD/StatsI_Fall2024/main/datasets/expenditure.txt", header=T)
 
 # Variables
-# Y = per capita expenditure on shelters/housing assistance in state
-# X1 = per capita personal income in state
-# X2 = Number of residents per 100,000 that are ”financially insecure” in state
-# X3 = Number of people per thousand residing in urban areas in state
+# Y = per capita expenditure on shelters/housing assistance in state (continuous)
+# X1 = per capita personal income in state (continuous)
+# X2 = Number of residents per 100,000 that are ”financially insecure” in state (discrete)
+# X3 = Number of people per thousand residing in urban areas in state (discrete)
 # Region: 1=Northeast, 2=North Central, 3=South, 4=West
 
 # Explore the expenditure data set and import data into R.
@@ -85,58 +85,55 @@ head(expenditure)
 summary(expenditure)
 
 # Please plot the relationships among Y, X1, X2, and X3? What are the correlations
-# among them (you just need to describe the graph and the relationships among them)?
+# among them (you just need to describe the graph and the relationships among them)
 
-# X1 
-p1 <- ggplot(expenditure, aes(x = X1, y = Y)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F, color = "blue") +
-  labs(x = "Per capita personal income", y = "Per capita expenditure on shelters/housing assistance") +
-  theme_minimal()
-ggsave("p1.png", p1)
-
-
-# X2
-p2 <- ggplot(expenditure, aes(x = X2, y = Y)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F, color = "red") +
-  labs(x = "N. of financially insecure residents (per 100,000)",
-       y = "Per capita expenditure on shelters/housing assistance") +
-  theme_minimal()
-ggsave("p2.png", p2)
-
-# X3
-p3 <- ggplot(expenditure, aes(x = X3, y = Y)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F, color = "darkgreen") +
-  labs(x = "Number of people per thousand residing in urban areas",
-       y = "Per capita expenditure on shelters/housing assistance") +
-  theme_minimal()
-ggsave("p3.png", p3)
+pdf("p1.pdf")
+ggpairs(expenditure, columns = c("Y", "X1", "X2", "X3"),
+        title = "Pairwise Correlation Matrix",
+        upper = list(continuous = wrap("cor", size = 4, color = "darkblue"), combo = wrap("cor", size = 3)),
+        lower = list(continuous = "smooth", combo = "smooth", 
+                     continuous_params = lisIf t(color = "darkblue", size = 0.5)),
+        diag = list(continuous = wrap("barDiag", color = "darkblue"), 
+                    discrete = wrap("barDiag", color = "darkblue"))) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),  
+        axis.text = element_text(size = 10),   
+        panel.grid.major = element_blank()) 
+dev.off()
 
 # Please plot the relationship between Y and Region? On average, which region has the
 # highest per capita expenditure on housing assistance?
 
-p4 <- ggplot(expenditure, aes(x = factor(Region), y = Y)) +
+pdf("p4.pdf")
+ggplot(expenditure, aes(x = factor(Region), y = Y)) +
   geom_boxplot(fill = "lightblue", color = "darkblue") +
   labs(x = "Region", y = "Per capita expenditure on shelters/housing assistance",
        title = "Expenditure by region") +
   scale_x_discrete(labels = c("1" = "Northeast", "2" = "North Central", "3" = "South", "4" = "West")) + 
-  theme_minimal()
-ggsave("p4.png", p4)
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        axis.test = element_text(size = 10))
+dev.off()
 
 # Please plot the relationship between Y and X1? Describe this graph and the relationship.
+pdf("p5.pdf")
 ggplot(expenditure, aes(x = X1, y = Y)) +
   geom_point() +
   geom_smooth(method = "lm", se = F, color = "blue") +
-  labs(x = "Per capita personal income", y = "Per capita expenditure on shelters/housing assistance") +
-  theme_minimal()
+  labs(x = "Per capita personal income", 
+       y = "Per capita expenditure on shelters/housing assistance",
+       title = "Expenditure on Shelters/Housing by PCI in state") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        axis.test = element_text(size = 10))
+dev.off()
+
 
 # Reproduce the above graph including one more variable Region and display
 # different regions with different types of symbols and colors.
 
-# Plot 
-p5 <- ggplot(expenditure, 
+pdf("p6.pdf")
+ggplot(expenditure, 
              aes(x = X1, 
                  y = Y, 
                  color = factor(Region), 
@@ -151,7 +148,8 @@ p5 <- ggplot(expenditure,
                      labels = c("1" = "Northeast", "2" = "North Central", "3" = "South", "4" = "West")) +
   scale_shape_manual(values = c(16, 17, 18, 19), 
                      labels = c("1" = "Northeast", "2" = "North Central", "3" = "South", "4" = "West")) +
-  theme_minimal()
-
-ggsave("p5.png", p5)
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        axis.test = element_text(size = 10))
+dev.off()
 
