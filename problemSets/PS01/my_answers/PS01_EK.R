@@ -53,6 +53,23 @@ cat("The 90% CI for the average student IQ score: (", lower_90_y, ", ", upper_90
 # is higher than the average IQ score (100) among all the schools in the country.
 # Using the same sample, conduct the appropriate hypothesis test with α = 0.05.
 
+# Setting up the hypotheses:
+# H0 (null): The average IQ score of the counselor's students is not greater than 100. 
+# H1 (altenative): The average IQ score of the counselor's students is greater than 100. 
+
+# How many observations do we have?
+n <- length(y) # 25 -> t-statistic because n < 30
+
+# Calculate the standard error
+se_y <- sd_y / sqrt(n)
+
+# Calculate the t-statistic
+t_stat <- (mean_y - 100) / se_y
+
+# ...and the p-value
+p_value <- (1 - pt(t_stat, df = n - 1)) # 0.7215383
+
+# To confirm:
 # Doing an one-sided t.test because we care about the IQ being higher than the average! 
 result <- t.test(y, mu = 100, alternative = "greater")
 
@@ -92,7 +109,7 @@ ggpairs(expenditure, columns = c("Y", "X1", "X2", "X3"),
         title = "Pairwise Correlation Matrix",
         upper = list(continuous = wrap("cor", size = 4, color = "darkblue"), combo = wrap("cor", size = 3)),
         lower = list(continuous = "smooth", combo = "smooth", 
-                     continuous_params = lisIf t(color = "darkblue", size = 0.5)),
+                     continuous_params = list(color = "darkblue", size = 0.5)),
         diag = list(continuous = wrap("barDiag", color = "darkblue"), 
                     discrete = wrap("barDiag", color = "darkblue"))) +
   theme_minimal() +
@@ -148,8 +165,6 @@ ggplot(expenditure,
                      labels = c("1" = "Northeast", "2" = "North Central", "3" = "South", "4" = "West")) +
   scale_shape_manual(values = c(16, 17, 18, 19), 
                      labels = c("1" = "Northeast", "2" = "North Central", "3" = "South", "4" = "West")) +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
-        axis.test = element_text(size = 10))
+  theme_minimal() 
 dev.off()
 
