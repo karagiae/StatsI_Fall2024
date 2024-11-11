@@ -1,0 +1,232 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 3}
+\date{Due: November 11, 2024}
+\author{Eleni Karagianni}
+
+
+\begin{document}
+	\maketitle
+	\section*{Instructions}
+	\begin{itemize}
+		\item Please show your work! You may lose points by simply writing in the answer. If the problem requires you to execute commands in \texttt{R}, please include the code you used to get your answers. Please also include the \texttt{.R} file that contains your code. If you are not sure if work needs to be shown for a particular problem, please ask.
+	\item Your homework should be submitted electronically on GitHub.
+	\item This problem set is due before 23:59 on Sunday November 11, 2024. No late assignments will be accepted.
+
+	\end{itemize}
+
+		\vspace{.25cm}
+	
+\noindent In this problem set, you will run several regressions and create an add variable plot (see the lecture slides) in \texttt{R} using the \texttt{incumbents\_subset.csv} dataset. Include all of your code.
+
+	\vspace{.5cm}
+\section*{Question 1}
+\vspace{.25cm}
+\noindent We are interested in knowing how the difference in campaign spending between incumbent and challenger affects the incumbent's vote share. 
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{difflog}.	\vspace{5cm}
+		
+		\lstinputlisting[language=R, firstline=42, lastline=43]{PS3_EK.R}
+		\input{reg1_output.tex}
+		
+		The coefficent for $\Delta$ in campaign spending is not directy interpretable because the variable is logged. However, a positive relationship between the spending and the incumbent's vote share is depicted in Table 1. Simply, the larger the difference between the incumbent's and the challenger's spending, the higher the electoral outcome of the incumbent is, on average. 
+		
+		\item Make a scatterplot of the two variables and add the regression line. 	
+		\lstinputlisting[language=R, firstline=46, lastline=52]{PS3_EK.R}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.5\textwidth]{reg1_plot.png}
+			\caption{Scatterplot of the difference in campaign spending between the incumbent and the challenger and the vote share of the incumbent.}
+		\end{figure}		
+		
+		Figure 1 indicates a positive association between the two variables implying that the higher the difference is (the more the incumbent spends on campaigning), the higher her vote share is. 
+		
+		\item Save the residuals of the model in a separate object.	\\
+		\lstinputlisting[language=R, firstline=56, lastline=56]{PS3_EK.R}
+		
+		\item Write the prediction equation.
+		\begin{equation*}
+			\text{Vote Share} = 0.579 + 0.042 \cdot \text{difflog} + \epsilon
+		\end{equation*}
+		
+	\end{enumerate}
+	
+\newpage
+
+\section*{Question 2}
+\noindent We are interested in knowing how the difference between incumbent and challenger's spending and the vote share of the presidential candidate of the incumbent's party are related.	\vspace{.25cm}
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is \texttt{presvote} and the explanatory variable is \texttt{difflog}.	
+		
+		We see a similar relationship as in Table 1. There is a positive and statistically significant (on the 0.01 level) association between the difference in campaign spending with the vote share of the presidential candidate, on average. However, the coefficient is not directly interpretable because it is logged. 
+		
+		\lstinputlisting[language=R, firstline=65, lastline=66]{PS3_EK.R}
+		\input{reg2_output.tex}
+		
+		\item Make a scatterplot of the two variables and add the regression line. 	
+		
+		\lstinputlisting[language=R, firstline=69, lastline=75]{PS3_EK.R}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.5\textwidth]{reg2_plot.png}
+			\caption{Scatterplot of the difference in campaign spending between the incumbent and the challenger and the vote share of the presidential candidate.}
+		\end{figure}		
+		
+		\item Save the residuals of the model in a separate object.
+		\lstinputlisting[language=R, firstline=79, lastline=79]{PS3_EK.R}
+		
+		\item Write the prediction equation.
+		\begin{equation*}
+			\text{PresVote} = 0.508 + 0.024 \cdot \text{difflog} + \epsilon
+		\end{equation*}
+		
+	\end{enumerate}
+	
+	\newpage	
+\section*{Question 3}
+
+\noindent We are interested in knowing how the vote share of the presidential candidate of the incumbent's party is associated with the incumbent's electoral success.
+	\vspace{.25cm}
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{presvote}.
+		
+		\lstinputlisting[language=R, firstline=87, lastline=88]{PS3_EK.R}
+		\input{reg3_output.tex}
+		
+		\item Make a scatterplot of the two variables and add the regression line. 
+		\lstinputlisting[language=R, firstline=91, lastline=97]{PS3_EK.R}
+			\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.5\textwidth]{reg3_plot.png}
+			\caption{Scatterplot of the vote shares of the presidential candidate of the incumbent party and the vote share of the incumbent.}
+		\end{figure}		
+		
+		\item Write the prediction equation.
+		\begin{equation*}
+			\text{Vote Share} = 0.441 + 0.388 \cdot \text{PresVote} + \epsilon
+		\end{equation*}
+		
+	\end{enumerate}
+	
+
+\newpage	
+\section*{Question 4}
+\noindent The residuals from part (a) tell us how much of the variation in \texttt{voteshare} is $not$ explained by the difference in spending between incumbent and challenger. The residuals in part (b) tell us how much of the variation in \texttt{presvote} is $not$ explained by the difference in spending between incumbent and challenger in the district.
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is the residuals from Question 1 and the explanatory variable is the residuals from Question 2.	
+	
+		\lstinputlisting[language=R, firstline=114, lastline=115]{PS3_EK.R}
+		\input{resid_reg_output.tex}
+		
+		The regression of the residuals from the incumbent vote share model (Model 1) on the residuals from the presidential candidate vote share model (Model 2) results in a significant positive relationship (on the 0.01 $\alpha$ level) indicating that the unexplained variation in the incumbent’s vote share is positively correlated with the unexplained variation in the presidential candidate’s vote share. 
+		
+		\item Make a scatterplot of the two residuals and add the regression line. 
+	
+		\lstinputlisting[language=R, firstline=119, lastline=125]{PS3_EK.R}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.5\textwidth]{resid_reg_plot.png}
+			\caption{The relationship between the residuals of Model 1 and Model 2.}
+		\end{figure}		
+		
+		\item Write the prediction equation.
+		
+		\begin{equation*}
+			\text{Residuals of Vote Share (reg1)} = 0.257 \cdot \text{Residuals of Presidential VS 	(reg2)} + \epsilon
+		\end{equation*}
+		
+	\end{enumerate}
+	
+	\newpage	
+
+\section*{Question 5}
+\noindent What if the incumbent's vote share is affected by both the president's popularity and the difference in spending between incumbent and challenger? 
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is the incumbent's \texttt{voteshare} and the explanatory variables are \texttt{difflog} and \texttt{presvote}.
+		
+		\lstinputlisting[language=R, firstline=138, lastline=139]{PS3_EK.R}
+		\input{reg4_output.tex}
+		
+		The interpretations of the previous models still apply to this multivariate model. The difference in campaign spending and the vote share of the presidential candidate are still positively correlated with the vote share of the incumbent. The coefficients are both statistically significant on the 0.01 $\alpha$ level. The difference in spending coefficient cannot directly be interpreted since it is on a logged scale. However, we can interpret the presidential candidate vote share as follows: for every unit increase on the vote share of the presidential candidate of the incumbent's party, the vote share of the incumbent increases by 0.257 percentage points, on average, keeping everything else constant. 
+				
+
+		\item Write the prediction equation.
+		\begin{equation*}
+			\text{Vote Share} = 0.449 + 0.036 \cdot \text{difflog} + 0.257 \cdot \text{PresVote} + \epsilon
+		\end{equation*}
+		
+		\item What is it in this output that is identical to the output in Question 4? Why do you think this is the case?
+		
+		The regression between the residuals (Table 4) shows a positive and significant coefficient (0.257), meaning that unexplained variation in \texttt{voteshare} is positively correlated with unexplained variation in \texttt{prescand}.  The fact that the coefficient for \texttt{prescand} remains the same in Table 5 suggests that the unexplained variation in \texttt{voteshare} and \texttt{prescand} are closely related, and that controlling for campaign spending differences did not change the relationship between these two variables.
+	
+		In short, the similarity in the coefficients suggests that the unexplained variation in voteshare and prescand is highly correlated, and the influence of prescand on voteshare remains stable even after accounting for campaign spending differences.
+		
+		
+	\end{enumerate}
+
+
+
+
+\end{document}
